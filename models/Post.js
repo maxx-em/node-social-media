@@ -24,6 +24,11 @@ const PostSchema = new Schema({
 		default: 0,
 		required: false,
 	},
+	comments: {
+		type: Object,
+		default: {},
+		required: false,
+	},
 });
 
 module.exports = model("Posts", PostSchema);

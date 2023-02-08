@@ -55,4 +55,39 @@ router.post("/:id/like", async (req, res, next) => {
 	}
 });
 
+router.post("/:id/comment", async (req, res, next) => {
+	const id = req.params.id;
+	const { author, comment } = req.body;
+
+	if (!id) {
+		res.status(400).json({
+			code: res.statusCode,
+			message: "Please provide a id.",
+		});
+	} else if (!author || !comment) {
+		res.status(400).json({
+			code: res.statusCode,
+			message: "Please provide a the required data.",
+		});
+	}
+
+	try {
+		const result = await Post.findByIdAndUpdate(id, {
+			comments: { author: author, comment: comment },
+		});
+
+		console.log(result);
+
+		res.status(201).json({
+			code: res.statusCode,
+			message: "Successfully added the comment.",
+		});
+	} catch (err) {
+		res.status(400).json({
+			code: res.statusCode,
+			message: err.message,
+		});
+	}
+});
+
 module.exports = router;

@@ -22,6 +22,8 @@ router.post("/create", async (req, res, next) => {
 			code: 200,
 			message: "Successfully created a post!",
 		});
+
+		console.log(post);
 	} catch (err) {
 		res.status(400).json({
 			code: res.statusCode,
@@ -73,7 +75,7 @@ router.post("/:id/comment", async (req, res, next) => {
 
 	try {
 		const result = await Post.findByIdAndUpdate(id, {
-			comments: { author: author, comment: comment },
+			$push: { [`comments.${author}`]: comment },
 		});
 
 		console.log(result);
@@ -82,6 +84,38 @@ router.post("/:id/comment", async (req, res, next) => {
 			code: res.statusCode,
 			message: "Successfully added the comment.",
 		});
+	} catch (err) {
+		res.status(400).json({
+			code: res.statusCode,
+			message: err.message,
+		});
+	}
+});
+
+router.delete("/:id/delete", async (req, res, next) => {
+	const id = req.params.id;
+
+	if (!id) {
+		res.status(400).json({
+			code: res.statusCode,
+			message: "Please provide a id.",
+		});
+	}
+
+	try {
+		const post = await Post.findByIdAndDelete(id);
+
+		if (post) {
+			res.status(200).json({
+				code: res.statusCode,
+				message: "Successfully deleted the comment.",
+			});
+		} else {
+			res.status(404).json({
+				code: res.statusCode,
+				message: "Post does not exist.",
+			});
+		}
 	} catch (err) {
 		res.status(400).json({
 			code: res.statusCode,

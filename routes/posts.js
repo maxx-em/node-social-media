@@ -69,7 +69,7 @@ router.post("/:id/comment", async (req, res, next) => {
 	} else if (!author || !comment) {
 		res.status(400).json({
 			code: res.statusCode,
-			message: "Please provide a the required data.",
+			message: "Please provide the required data.",
 		});
 	}
 
